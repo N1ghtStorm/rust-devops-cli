@@ -1,3 +1,32 @@
+use clap::Parser;
+
+use duct::cmd;
+
+
+// / Simple program to greet a person
+#[derive(Parser, Debug)]
+#[clap(about, version, author)]
+struct Args {
+    /// Name of the person to greet
+    #[clap(short, long)]
+    name: String,
+
+    /// Number of times to greet
+    #[clap(short, long, default_value_t = 1)]
+    count: u8,
+}
+
+
+
 fn main() {
-    println!("Hello, world!");
+    let args = Args::parse();
+
+    for _ in 0..args.count {
+        println!("Hello {}!", args.name)
+    }
+
+    match cmd!("git", "status").run() {
+        Err(_) => println!("Error"),
+        Ok(_) => {}
+    }
 }
