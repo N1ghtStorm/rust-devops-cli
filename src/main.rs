@@ -5,9 +5,11 @@ use duct::cmd;
 #[derive(Parser, Debug)]
 #[clap(about, version, author)]
 struct Args {
-    /// Name of the person to greet
     #[clap(short, long)]
     mode: String,
+
+    #[clap(short, long, default_value = "./")]
+    dir: String,
 }
 
 fn main() {
@@ -19,13 +21,23 @@ fn main() {
         _ => todo!()
     };
 
+    match cmd!("echo", "git", "clone", "https://github.com/EvercityEcosystem/smart-sustainable-bond.git", args.dir.clone()).run() {
+        Err(_) => println!("Error"),
+        Ok(_) => {},
+    }
+
+    match cmd!("echo", "cd",  args.dir).run() {
+        Err(_) => println!("Error"),
+        Ok(_) => {},
+    }
+
     match cmd!("echo", "git", "checkout", branch).run() {
         Err(_) => println!("Error"),
-        Ok(_) => {}
+        Ok(_) => {},
     }
 
     match cmd!("echo", "make", "run").run() {
         Err(_) => println!("Error"),
-        Ok(_) => {}
+        Ok(_) => {},
     }
 }
