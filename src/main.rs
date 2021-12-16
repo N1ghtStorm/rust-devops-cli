@@ -1,31 +1,30 @@
 use clap::Parser;
-
 use duct::cmd;
 
-
-// / Simple program to greet a person
+/// Simple program to greet a person
 #[derive(Parser, Debug)]
 #[clap(about, version, author)]
 struct Args {
     /// Name of the person to greet
     #[clap(short, long)]
-    name: String,
-
-    /// Number of times to greet
-    #[clap(short, long, default_value_t = 1)]
-    count: u8,
+    mode: String,
 }
-
-
 
 fn main() {
     let args = Args::parse();
 
-    for _ in 0..args.count {
-        println!("Hello {}!", args.name)
+    let branch = match &args.mode[..]  {
+        "bond" => "master",
+        "carbon" => "add_carbon_credits",
+        _ => todo!()
+    };
+
+    match cmd!("echo", "git", "checkout", branch).run() {
+        Err(_) => println!("Error"),
+        Ok(_) => {}
     }
 
-    match cmd!("git", "status").run() {
+    match cmd!("echo", "make", "run").run() {
         Err(_) => println!("Error"),
         Ok(_) => {}
     }
